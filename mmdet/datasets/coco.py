@@ -17,7 +17,6 @@ from .custom import CustomDataset
 
 @DATASETS.register_module()
 class CocoDataset(CustomDataset):
-
     CLASSES = ('person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',
                'train', 'truck', 'boat', 'traffic light', 'fire hydrant',
                'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog',
@@ -52,6 +51,10 @@ class CocoDataset(CustomDataset):
             info = self.coco.load_imgs([i])[0]
             info['filename'] = info['file_name']
             data_infos.append(info)
+            # print(i)
+            # print('=====')
+            # print(info)
+            # print('======')
         return data_infos
 
     def get_ann_info(self, idx):
@@ -67,6 +70,7 @@ class CocoDataset(CustomDataset):
         img_id = self.data_infos[idx]['id']
         ann_ids = self.coco.get_ann_ids(img_ids=[img_id])
         ann_info = self.coco.load_anns(ann_ids)
+        # print(ann_info)
         return self._parse_ann_info(self.data_infos[idx], ann_info)
 
     def get_cat_ids(self, idx):
@@ -176,7 +180,9 @@ class CocoDataset(CustomDataset):
             bboxes_ignore=gt_bboxes_ignore,
             masks=gt_masks_ann,
             seg_map=seg_map)
-
+        # print('====')
+        # print(ann)
+        # print('===')
         return ann
 
     def xyxy2xywh(self, bbox):
@@ -351,7 +357,7 @@ class CocoDataset(CustomDataset):
         assert isinstance(results, list), 'results must be a list'
         assert len(results) == len(self), (
             'The length of results is not equal to the dataset len: {} != {}'.
-            format(len(results), len(self)))
+                format(len(results), len(self)))
 
         if jsonfile_prefix is None:
             tmp_dir = tempfile.TemporaryDirectory()
